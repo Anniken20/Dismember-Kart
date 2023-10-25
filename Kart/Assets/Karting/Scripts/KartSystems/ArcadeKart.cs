@@ -292,7 +292,7 @@ namespace KartGame.KartSystems
             // apply our powerups to create our finalStats
             TickPowerups();
 
-            // apply our physics properties
+           // apply our physics properties
             Rigidbody.centerOfMass = transform.InverseTransformPoint(CenterOfMass.position);
 
             int groundedCount = 0;
