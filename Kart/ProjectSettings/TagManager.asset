@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Checkpoint
   - Ground
+  - Finishline
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - Finishline
   - PostProcessing
   - Ground
   - Environment
@@ -22,7 +23,7 @@ TagManager:
   - CrashObject
   - Kart
   - TrainingCheckpoints
-  - 
+  - Player
   - 
   - 
   - 

@@ -2,21 +2,44 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
-
-//How do you lose and win insert at the bottom required
+using System.Collections;
 
 public class TimeTrialManager : MonoBehaviour
 {
     public Text timerText;
+    public Text countdownText; // Add a UI Text for the countdown
     public Transform playerKart;
     public float targetTime = 120.0f; // Set the target time for the race
+    public Transform finishLine; // Reference to the finish line trigger
     private float startTime;
     private bool isRaceActive = false;
     private bool isRaceFinished = false;
 
+    private int countdownValue = 3; // Set the initial countdown value
+    private Coroutine countdownCoroutine; // Reference to the countdown coroutine
+
     void Start()
     {
-        // Can start the race using a UI button or some other trigger
+        // Initialize the countdown
+        StartCoroutine(StartCountdown());
+    }
+
+    IEnumerator StartCountdown()
+    {
+        countdownText.text = countdownValue.ToString();
+        yield return new WaitForSeconds(1);
+
+        while (countdownValue > 0)
+        {
+            countdownValue--;
+            countdownText.text = countdownValue.ToString();
+            yield return new WaitForSeconds(1);
+        }
+
+        countdownText.text = "GO!";
+        yield return new WaitForSeconds(1);
+
+        countdownText.gameObject.SetActive(false); // Hide the countdown text
         StartRace();
     }
 
@@ -25,12 +48,6 @@ public class TimeTrialManager : MonoBehaviour
         if (isRaceActive)
         {
             UpdateTimer();
-
-            // Check if the race is finished
-            if (Time.time - startTime >= targetTime && !isRaceFinished)
-            {
-                EndRace(true);
-            }
         }
     }
 
@@ -52,6 +69,11 @@ public class TimeTrialManager : MonoBehaviour
         isRaceActive = true;
     }
 
+    public void AddTime(float timeToAdd)
+    {
+        targetTime += timeToAdd; // Add the specified time to the target time
+    }
+
     void EndRace(bool isWinner)
     {
         isRaceActive = false;
@@ -68,5 +90,18 @@ public class TimeTrialManager : MonoBehaviour
             SceneManager.LoadScene("LoseScene");
         }
     }
-}
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && other.transform == finishLine)
+        {
+            if (!isRaceFinished)
+            {
+                // Load the win scene
+                SceneManager.LoadScene("WinScene");
+                Debug.Log("Player crossed the finish line");
+                EndRace(true); // Player crossed the finish line - triggering a winning condition
+            }
+        }
+    }
+}
