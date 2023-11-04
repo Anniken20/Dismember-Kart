@@ -4,80 +4,107 @@ using UnityEngine;
 
 public class KartMovement : MonoBehaviour
 {
+    [Header("Movement Parameters")]
     public float maxSpeed = 20f;
     public float acceleration = 10f;
     public float braking = 10f;
     public float steering = 5f;
     public float checkpointTolerance = 2.0f;
 
+    [Header("Speed Boost")]
+    public float baseSpeed = 10.0f;
+    private float currentSpeed;
+
     private Rigidbody kartRigidbody;
     private int currentCheckpoint = 0;
-    private int currentLap = 1;
     private float lapStartTime;
     private float bestLapTime = float.MaxValue;
-    private float raceTime;
     private bool raceStarted = false;
     private bool raceFinished = false;
 
+    public CheckpointManager checkpointManager;
+    private int currentCheckpointIndex = 0;
+    private int currentLap = 1;
 
-    void Start()
+    private void Start()
     {
         kartRigidbody = GetComponent<Rigidbody>();
         lapStartTime = Time.time;
+        currentSpeed = baseSpeed;
     }
-    void Update()
+
+    private void Update()
     {
         if (raceFinished)
             return;
 
+        HandleInput();
+        LimitSpeed();
+    }
+
+    private void HandleInput()
+    {
         float throttle = Input.GetAxis("Vertical");
         float steer = Input.GetAxis("Horizontal");
         float brake = Input.GetButton("Brake") ? braking : 0f;
 
-        // Acceleration and braking
         float accelerationForce = (throttle - brake) * acceleration;
         kartRigidbody.AddForce(transform.forward * accelerationForce);
 
-        // Steering
         float steerForce = steer * steering;
         kartRigidbody.AddTorque(transform.up * steerForce);
+    }
 
-        // Calculate speed
+    private void LimitSpeed()
+    {
         float currentSpeed = kartRigidbody.velocity.magnitude;
 
-        // Speed limit
         if (currentSpeed > maxSpeed)
         {
             kartRigidbody.velocity = (kartRigidbody.velocity.normalized) * maxSpeed;
         }
     }
 
-   /* void OnTriggerEnter(Collider other)
+    public void ApplySpeedBoost(float speedBoostAmount, float duration)
     {
-        if (other.CompareTag("Checkpoint") && raceStarted)
+        currentSpeed += speedBoostAmount;
+        StartCoroutine(RemoveSpeedBoostAfterDuration(duration));
+    }
+
+    private IEnumerator RemoveSpeedBoostAfterDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        currentSpeed = baseSpeed;
+    }
+
+    public void OnCheckpointReached(Transform checkpointTransform)
+    {
+        if (raceStarted)
         {
-            int checkpointIndex = int.Parse(other.name);
+            int expectedCheckpointIndex = (currentCheckpointIndex + 1) % checkpointManager.Checkpoints.Count;
 
-             Check if the checkpoint was passed in order
-            if (checkpointIndex == currentCheckpoint + 1 || (checkpointIndex == 0 && currentCheckpoint == CheckpointManager.Checkpoints.Length - 1))
+            if (checkpointTransform == checkpointManager.Checkpoints[expectedCheckpointIndex])
             {
-                currentCheckpoint = checkpointIndex;
-
-                // Check for lap completion
-                if (currentCheckpoint == 0)
-                {
-                    if (currentLap == 1)
-                        bestLapTime = Time.time - lapStartTime;
-                    else
-                        bestLapTime = Mathf.Min(bestLapTime, Time.time - lapStartTime);
-
-                    lapStartTime = Time.time;
-                    currentLap++;
-                }
+                currentCheckpointIndex = expectedCheckpointIndex;
+                CheckpointPassed(); // Handle checkpoint logic here
             }
         }
     }
-*/
+
+    private void CheckpointPassed()
+    {
+        if (currentCheckpointIndex == 0)
+        {
+            if (currentLap == 1)
+                bestLapTime = Time.time - lapStartTime;
+            else
+                bestLapTime = Mathf.Min(bestLapTime, Time.time - lapStartTime);
+
+            lapStartTime = Time.time;
+            currentLap++;
+        }
+    }
+
     public float GetBestLapTime()
     {
         return bestLapTime;
@@ -85,7 +112,7 @@ public class KartMovement : MonoBehaviour
 
     public float GetRaceTime()
     {
-        return raceTime;
+        return Time.time - lapStartTime;
     }
 
     public bool HasRaceStarted()
@@ -93,9 +120,14 @@ public class KartMovement : MonoBehaviour
         return raceStarted;
     }
 
-    public void StartRace()
+    public bool IsRaceFinished()
     {
-        raceStarted = true;
+        return raceFinished;
+    }
+
+    public void FinishRace()
+    {
+        raceFinished = true;
     }
 
     public int GetCurrentLap()

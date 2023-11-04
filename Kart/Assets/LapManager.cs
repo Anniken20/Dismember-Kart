@@ -1,21 +1,31 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class LapManager : MonoBehaviour
 {
     public int totalLaps = 3;
     private int currentLap = 0;
-    private List<string> checkpointsPassed = new List<string>();
-    public int totalCheckpointsInALap = 3; // Specify the total number of checkpoints in a lap
+    public List<string> checkpointsPassed = new List<string>();
+    public int totalCheckpointsInALap = 3;
+
+    private KartMovement kartMovement;
+    private float startTime;
+    private float endTime;
 
     public event Action<int> OnLapComplete;
 
-    public void OnCheckpointReached(string checkpointTag)
+    private void Awake()
     {
-        if (!checkpointsPassed.Contains(checkpointTag))
+        kartMovement = GetComponent<KartMovement>();
+    }
+
+    private void Update()
+    {
+        if (kartMovement != null && kartMovement.HasRaceStarted() && currentLap < totalLaps)
         {
-            checkpointsPassed.Add(checkpointTag);
+            endTime = Time.time;
+
             if (checkpointsPassed.Count == totalCheckpointsInALap)
             {
                 CompleteLap();
@@ -23,19 +33,33 @@ public class LapManager : MonoBehaviour
         }
     }
 
-    public void CompleteLap()
+    public void OnCheckpointReached(string checkpointTag)
+    {
+        if (kartMovement != null && kartMovement.HasRaceStarted())
+        {
+            if (!checkpointsPassed.Contains(checkpointTag))
+            {
+                checkpointsPassed.Add(checkpointTag);
+            }
+        }
+    }
+
+    private void CompleteLap()
     {
         currentLap++;
-        checkpointsPassed.Clear(); // Reset checkpoints for a new lap
+        checkpointsPassed.Clear();
 
         if (currentLap <= totalLaps)
         {
             Debug.Log("Lap " + currentLap + " completed!");
             OnLapComplete?.Invoke(currentLap);
-        }
-        else
-        {
-            Debug.Log("Race Finished!");
+
+            if (currentLap == totalLaps)
+            {
+                kartMovement.FinishRace();
+                Debug.Log("Race Finished!");
+                Debug.Log("Total race time: " + (endTime - startTime) + " seconds");
+            }
         }
     }
 }

@@ -3,12 +3,22 @@ using UnityEngine.UI;
 
 public class LapUI : MonoBehaviour
 {
-    public KartMovement kartMovement;
+    public LapManager lapManager;
     public Text lapText;
 
-    void Update()
+    private void Start()
     {
-        int currentLap = kartMovement.GetCurrentLap();
-        lapText.text = "Lap: " + currentLap;
+        if (lapManager == null)
+        {
+            Debug.LogError("LapManager not assigned to LapUI.");
+            enabled = false;
+        }
+        lapText.text = "Lap: 0 / " + lapManager.totalLaps;
+        lapManager.OnLapComplete += UpdateLapUI;
+    }
+
+    private void UpdateLapUI(int lap)
+    {
+        lapText.text = "Lap: " + lap + " / " + lapManager.totalLaps;
     }
 }

@@ -2,29 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject PausePanel;
-
-    //delegate events that every script can subscribe to.
-    //when this is called via this script, every script's subscriber function is called
-    public delegate void OnPause();
-    public static event OnPause onPause;
-
-    public delegate void OnResume();
-    public static event OnResume onResume;
-
-    [HideInInspector] public static bool paused;
-
-    private const string mainMenuScene = "MainMenu";
+    public GameObject pauseMenuUI;
+    private bool isPaused = false;
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
         {
-            if(paused)
+            if (isPaused)
             {
-                Continue();
+                Resume();
             }
             else
             {
@@ -32,32 +22,28 @@ public class PauseMenu : MonoBehaviour
             }
         }
     }
-    public void Pause()
+
+    public void Resume()
     {
-        paused = true;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        PausePanel.SetActive(true);
-        Time.timeScale = 0;
-        onPause?.Invoke();
-    }
-    public void Continue()
-    {
-        paused = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        PausePanel.SetActive(false);
-        Time.timeScale = 1;
-        onResume?.Invoke();
-    }
-    public void LoadMenu()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene("MainMenu");
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
     }
 
     public void QuitGame()
     {
-        SceneManager.LoadScene(mainMenuScene);
+        Application.Quit();
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu"); 
+    }
+
+    void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
     }
 }
