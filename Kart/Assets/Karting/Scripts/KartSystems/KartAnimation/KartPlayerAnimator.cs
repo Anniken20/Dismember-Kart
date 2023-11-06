@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace KartGame.KartSystems 
+/*namespace KartGame.KartSystems 
 {
     public class KartPlayerAnimator : MonoBehaviour
     {
@@ -33,3 +33,4 @@ namespace KartGame.KartSystems
         }
     }
 }
+*/
