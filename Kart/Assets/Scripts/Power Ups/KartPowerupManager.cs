@@ -8,12 +8,16 @@ public class KartPowerupManager : MonoBehaviour
 
     private Vector3 originalScale;
     private float timer = 0f;
+    //[Header("Manager")]
+    public enum PowerUpType
+    {
+        None,
+        Shrink,
+        Growth,
+        Speed
+    }
 
-    [Header("Growth Powerup")]
-    private float growthScale = 1.5f;
-    private float timeToGrow = 1f;
-    private bool isGrown;
-    [SerializeField] private AnimationCurve growAnimCurve;
+    [SerializeField] private PowerUpType _powerUpType; 
 
     [Header("Shrink Powerup")]
     private float shrinkScale = 0.5f;
@@ -21,6 +25,11 @@ public class KartPowerupManager : MonoBehaviour
     private bool isShrunk;
     [SerializeField] private AnimationCurve shrinkAnimCurve;
 
+    [Header("Growth Powerup")]
+    private float growthScale = 1.5f;
+    private float timeToGrow = 1f;
+    private bool isGrown;
+    [SerializeField] private AnimationCurve growAnimCurve;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +47,21 @@ public class KartPowerupManager : MonoBehaviour
     {
         if (collider.CompareTag("Power-Up"))
         {
-            StartCoroutine(StartShrink());
+            PowerupPickup powerupPickup = collider.GetComponent<PowerupPickup>();
+            if (powerupPickup != null)
+            {
+                _powerUpType = powerupPickup._powerUpType;
+
+                switch(_powerUpType)
+                {
+                    case PowerUpType.Shrink:
+                        StartCoroutine(StartShrink());
+                        break;
+                    case PowerUpType.Growth:
+                        StartCoroutine(StartGrowth());
+                        break;
+                }
+            }
         }
     }
 
@@ -54,11 +77,12 @@ public class KartPowerupManager : MonoBehaviour
             yield return null;
         }
 
+        isShrunk = true;
         yield return new WaitForSeconds(2f);
-        //StartCoroutine(EndShrink());
+        StartCoroutine(EndSizeChange());
     }
 
-    IEnumerator EndShrink()
+    IEnumerator EndSizeChange()
     {
         Vector3 currentScale = transform.localScale;
         timer = 0f;
@@ -69,5 +93,30 @@ public class KartPowerupManager : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+
+        isGrown = false;
+        isShrunk = false;
+    }
+
+    IEnumerator StartGrowth()
+    {
+        Vector3 maxScale = Vector3.one * growthScale;
+        timer = 0f;
+
+        while (timer < timeToGrow)
+        {
+            transform.localScale = Vector3.Lerp(originalScale, maxScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        isGrown = true;
+        yield return new WaitForSeconds(2f);
+        StartCoroutine(EndSizeChange());
+    }
+
+    private bool CheckSpace()
+    {
+        return false;
     }
 }
