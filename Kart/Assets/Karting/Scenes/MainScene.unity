@@ -3233,6 +3233,11 @@ PrefabInstance:
       propertyPath: WheelsPositionVerticalOffset
       value: 0.277
       objectReference: {fileID: 0}
+    - target: {fileID: 7798798855861188978, guid: 19954de30401f73428254541a9ad156e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -3287,10 +3292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 509493522ffddf94ca9b9742d6507f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kart: {fileID: 1304724376}
-  ghostKart: {fileID: 1090897119}
-  recording: 1
-  playing: 1
 --- !u!4 &1326166107
 Transform:
   m_ObjectHideFlags: 0
