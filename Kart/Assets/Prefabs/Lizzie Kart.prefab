@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 2003277924184477147}
   m_Layer: 13
   m_Name: KartBouncingCapsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -877,7 +877,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3899945986505599365}
   m_Layer: 2
-  m_Name: Target
+  m_Name: Cam Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1038,7 +1038,7 @@ GameObject:
   - component: {fileID: 6436535029068849015}
   - component: {fileID: 8222329248299363135}
   m_Layer: 0
-  m_Name: casual car lizzie updated
+  m_Name: Lizzie Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1109,6 +1109,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6341854311079823713
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4954690870264786125}
+  m_Layer: 2
+  m_Name: Overhead Space Checker
+  m_TagString: Untagged
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4954690870264786125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6341854311079823713}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.733, z: 0}
+  m_LocalScale: {x: 1, y: 2.2288, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 575575007444594198}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6895795477574355988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1602,7 +1633,7 @@ GameObject:
   - component: {fileID: 404978356417851243}
   m_Layer: 2
   m_Name: Lizzie Kart
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1624,6 +1655,7 @@ Transform:
   - {fileID: 8010131104666617029}
   - {fileID: 4961040580643180334}
   - {fileID: 3899945986505599365}
+  - {fileID: 4954690870264786125}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1434652685128581697
@@ -1884,6 +1916,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  overheadCheckCollider: {fileID: 4954690870264786125}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  overheadCheckRadius: 0.55
 --- !u!1 &8644387330942798740
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Barracuda;
 using UnityEngine;
 
 namespace KartGame.KartSystems
@@ -42,6 +43,11 @@ namespace KartGame.KartSystems
         private bool isGrown;
         [SerializeField] private AnimationCurve growAnimCurve;
 
+        [Header("Overhead Check")]
+        [SerializeField] private Transform overheadCheckCollider;
+        [SerializeField] private LayerMask obstacleLayer;
+        public float overheadCheckRadius = 0.5f;
+
         void Awake()
         {
             m_Inputs = GetComponents<IInput>();
@@ -58,6 +64,7 @@ namespace KartGame.KartSystems
         {
             GatherInputs();
             UsePowerup();
+            CheckForSpace();
         }
 
         void GatherInputs()
@@ -87,15 +94,18 @@ namespace KartGame.KartSystems
                 {
                     case PowerUpType.Shrink:
                         StartCoroutine(StartShrink());
+                        _powerUpType = PowerUpType.None;
                         break;
                     case PowerUpType.Growth:
-                        StartCoroutine(StartGrowth());
+                        if (CheckForSpace())
+                        {
+                            StartCoroutine(StartGrowth());
+                            _powerUpType = PowerUpType.None;
+                        }
                         break;
                     case PowerUpType.Speed:
                         break;
                 }
-
-                _powerUpType = PowerUpType.None;
             }
         }
 
@@ -113,35 +123,52 @@ namespace KartGame.KartSystems
 
         IEnumerator StartShrink()
         {
-            Vector3 minScale = Vector3.one * shrinkScale;
-            timer = 0f;
-
-            while (timer < timeToShrink)
+            if (!isShrunk)
             {
-                transform.localScale = Vector3.Lerp(originalScale, minScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
-                timer += Time.deltaTime;
-                yield return null;
+                Vector3 minScale = Vector3.one * shrinkScale;
+                timer = 0f;
+
+                while (timer < timeToShrink && !isShrunk)
+                {
+                    transform.localScale = Vector3.Lerp(originalScale, minScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                isShrunk = true;
             }
 
-            isShrunk = true;
             yield return new WaitForSeconds(2f);
-            StartCoroutine(EndSizeChange());
+            /*while (isShrunk)
+            {
+                if(CheckForSpace())
+                {
+                    StartCoroutine(EndSizeChange());
+                }
+            }*/
         }
 
         IEnumerator EndSizeChange()
         {
-            Vector3 currentScale = transform.localScale;
-            timer = 0f;
-
-            while (timer < timeToShrink)
+            if (isShrunk || isGrown)
             {
-                transform.localScale = Vector3.Lerp(currentScale, originalScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
-                timer += Time.deltaTime;
+                Vector3 currentScale = transform.localScale;
+                timer = 0f;
+
+                while (timer < timeToShrink)
+                {
+                    transform.localScale = Vector3.Lerp(currentScale, originalScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                isGrown = false;
+                isShrunk = false;
+            }
+            else
+            {
                 yield return null;
             }
-
-            isGrown = false;
-            isShrunk = false;
         }
 
         IEnumerator StartGrowth()
@@ -163,7 +190,25 @@ namespace KartGame.KartSystems
 
         private bool CheckForSpace()
         {
+            if (!Physics.CheckSphere(overheadCheckCollider.position, overheadCheckRadius, obstacleLayer))
+            {
+                return true;
+            }
             return false;
+        }
+
+        private void OnDrawGizmos()
+        {
+            /*// draws gizmo for overhead checker
+            if (CheckForSpace())
+            {
+                Gizmos.color = Color.green;
+            }
+            else
+            {
+                Gizmos.color = Color.red;
+            }
+            Gizmos.DrawSphere(overheadCheckCollider.position, overheadCheckRadius);*/
         }
     }
 }
