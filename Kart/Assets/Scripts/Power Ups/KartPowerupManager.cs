@@ -11,6 +11,13 @@ namespace KartGame.KartSystems
     {
         // this script goes on the kart itself and it gets and tracks powerups
 
+        [Header("References")]
+        private ArcadeKart arcadeKart;
+        public ArcadeKart.StatPowerup speedBoostStats = new ArcadeKart.StatPowerup
+        {
+            MaxTime = 5
+        };
+
 
         [Header("Inputs")]
         IInput[] m_Inputs;
@@ -28,20 +35,31 @@ namespace KartGame.KartSystems
             Growth,
             Speed
         }
-
         [SerializeField] private PowerUpType _powerUpType; 
 
         [Header("Shrink Powerup")]
         private float shrinkScale = 0.5f;
         private float timeToShrink = 0.5f;
+        [SerializeField] private float shrinkTime = 5f;
         private bool isShrunk;
         [SerializeField] private AnimationCurve shrinkAnimCurve;
 
         [Header("Growth Powerup")]
         private float growthScale = 1.5f;
-        private float timeToGrow = 1f;
+        private float timeToGrow = 0.5f;
+        [SerializeField] private float growTime = 5f;
         private bool isGrown;
         [SerializeField] private AnimationCurve growAnimCurve;
+
+        [Header("Audio")]
+        AudioSource audioSource;
+        [SerializeField] AudioClip pickupSound;
+        [SerializeField] AudioClip growSound;
+        [SerializeField] AudioClip shrinkSound;
+        [SerializeField] AudioClip speedSound;
+        [SerializeField] AudioClip speedExpireSound;
+        [SerializeField] AudioClip breakTombstoneSound;
+        
 
         [Header("Overhead Check")]
         [SerializeField] private Transform overheadCheckCollider;
@@ -51,6 +69,8 @@ namespace KartGame.KartSystems
         void Awake()
         {
             m_Inputs = GetComponents<IInput>();
+            audioSource = GetComponent<AudioSource>();
+            arcadeKart = GetComponent<ArcadeKart>();
         }
 
         // Start is called before the first frame update
@@ -88,22 +108,28 @@ namespace KartGame.KartSystems
 
         private void UsePowerup()
         {
-            if (interactPressed)
+            if (interactPressed && !isGrown && !isShrunk)
             {
                 switch(_powerUpType)
                 {
                     case PowerUpType.Shrink:
+                        audioSource.PlayOneShot(shrinkSound);
                         StartCoroutine(StartShrink());
                         _powerUpType = PowerUpType.None;
                         break;
                     case PowerUpType.Growth:
                         if (CheckForSpace())
                         {
+                            audioSource.PlayOneShot(growSound);
                             StartCoroutine(StartGrowth());
                             _powerUpType = PowerUpType.None;
                         }
                         break;
                     case PowerUpType.Speed:
+                        audioSource.PlayOneShot(speedSound);
+                        arcadeKart.AddPowerup(speedBoostStats);
+                        StartCoroutine(EndSpeed());
+                        _powerUpType = PowerUpType.None;
                         break;
                 }
             }
@@ -116,8 +142,20 @@ namespace KartGame.KartSystems
                 PowerupPickup powerupPickup = collider.GetComponent<PowerupPickup>();
                 if (powerupPickup != null)
                 {
+                    audioSource.PlayOneShot(pickupSound);
                     _powerUpType = powerupPickup._powerUpType;
                 }
+            }
+
+
+        }
+
+        void OnTriggerStay(Collider collider)
+        {
+            if (collider.CompareTag("Breakable") && isGrown)
+            {
+                audioSource.PlayOneShot(breakTombstoneSound);
+                collider.gameObject.SetActive(false);
             }
         }
 
@@ -138,14 +176,10 @@ namespace KartGame.KartSystems
                 isShrunk = true;
             }
 
-            yield return new WaitForSeconds(2f);
-            /*while (isShrunk)
-            {
-                if(CheckForSpace())
-                {
-                    StartCoroutine(EndSizeChange());
-                }
-            }*/
+            yield return new WaitForSeconds(shrinkTime);
+            yield return new WaitUntil(CheckForSpace);
+            audioSource.PlayOneShot(growSound);
+            StartCoroutine(EndSizeChange());
         }
 
         IEnumerator EndSizeChange()
@@ -184,8 +218,15 @@ namespace KartGame.KartSystems
             }
 
             isGrown = true;
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(growTime);
+            audioSource.PlayOneShot(shrinkSound);
             StartCoroutine(EndSizeChange());
+        }
+
+        IEnumerator EndSpeed()
+        {
+            yield return new WaitForSeconds(speedBoostStats.MaxTime);
+            audioSource.PlayOneShot(speedExpireSound);
         }
 
         private bool CheckForSpace()
