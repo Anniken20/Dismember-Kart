@@ -9,6 +9,7 @@ TagManager:
   - Finishline
   - Power-Up
   - Progression Manager
+  - Breakable
   layers:
   - Default
   - TransparentFX

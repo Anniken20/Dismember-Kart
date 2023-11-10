@@ -110,7 +110,7 @@ public class ProgressionManager : MonoBehaviour
         float seconds = Mathf.FloorToInt(currentTime % 60);
 
         timeStatusText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-        Debug.Log(minutes + ":" + seconds);
+        //Debug.Log(minutes + ":" + seconds);
     }
 
     public void AddTime(float timeGained)
