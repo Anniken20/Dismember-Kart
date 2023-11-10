@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _powerUpType: 2
-  randomize: 0
+  randomize: 1
 --- !u!95 &5818485594902320455
 Animator:
   serializedVersion: 5

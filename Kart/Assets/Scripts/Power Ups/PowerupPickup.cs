@@ -12,12 +12,17 @@ namespace KartGame.KartSystems
 
         void Start()
         {
-
+            if (randomize)
+            {
+                StartCoroutine(RandomPowerUp());
+            }
         }
 
         IEnumerator RandomPowerUp()
         {
-            return null;
+            yield return new WaitForSeconds(1f);
+            _powerUpType = (KartPowerupManager.PowerUpType)Random.Range(1,4);
+            StartCoroutine(RandomPowerUp());
         }
     }
 }
