@@ -1,122 +1,214 @@
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Barracuda;
 using UnityEngine;
 
-public class KartPowerupManager : MonoBehaviour
+namespace KartGame.KartSystems
 {
-    // this script goes on the kart itself and it gets and tracks powerups
-
-    private Vector3 originalScale;
-    private float timer = 0f;
-    //[Header("Manager")]
-    public enum PowerUpType
+    public class KartPowerupManager : MonoBehaviour
     {
-        None,
-        Shrink,
-        Growth,
-        Speed
-    }
+        // this script goes on the kart itself and it gets and tracks powerups
 
-    [SerializeField] private PowerUpType _powerUpType; 
 
-    [Header("Shrink Powerup")]
-    private float shrinkScale = 0.5f;
-    private float timeToShrink = 0.5f;
-    private bool isShrunk;
-    [SerializeField] private AnimationCurve shrinkAnimCurve;
+        [Header("Inputs")]
+        IInput[] m_Inputs;
+        public InputData Input     { get; private set; }
+        private bool interactPressed;
 
-    [Header("Growth Powerup")]
-    private float growthScale = 1.5f;
-    private float timeToGrow = 1f;
-    private bool isGrown;
-    [SerializeField] private AnimationCurve growAnimCurve;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        originalScale = transform.localScale;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void OnTriggerEnter(Collider collider)
-    {
-        if (collider.CompareTag("Power-Up"))
+        [Header("Manager")]
+        private Vector3 originalScale;
+        private float timer = 0f;
+        public enum PowerUpType
         {
-            PowerupPickup powerupPickup = collider.GetComponent<PowerupPickup>();
-            if (powerupPickup != null)
-            {
-                _powerUpType = powerupPickup._powerUpType;
+            None,
+            Shrink,
+            Growth,
+            Speed
+        }
 
+        [SerializeField] private PowerUpType _powerUpType; 
+
+        [Header("Shrink Powerup")]
+        private float shrinkScale = 0.5f;
+        private float timeToShrink = 0.5f;
+        private bool isShrunk;
+        [SerializeField] private AnimationCurve shrinkAnimCurve;
+
+        [Header("Growth Powerup")]
+        private float growthScale = 1.5f;
+        private float timeToGrow = 1f;
+        private bool isGrown;
+        [SerializeField] private AnimationCurve growAnimCurve;
+
+        [Header("Overhead Check")]
+        [SerializeField] private Transform overheadCheckCollider;
+        [SerializeField] private LayerMask obstacleLayer;
+        public float overheadCheckRadius = 0.5f;
+
+        void Awake()
+        {
+            m_Inputs = GetComponents<IInput>();
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            originalScale = transform.localScale;
+        }
+
+        // Update is called once per frame
+        void FixedUpdate()
+        {
+            GatherInputs();
+            UsePowerup();
+            CheckForSpace();
+        }
+
+        void GatherInputs()
+        {
+            // reset input
+            Input = new InputData();
+
+            // gather nonzero input from our sources
+            for (int i = 0; i < m_Inputs.Length; i++)
+            {
+                Input = m_Inputs[i].GenerateInput();
+
+                interactPressed = Input.InteractInput;
+
+                if (interactPressed)
+                {
+                    Debug.Log("Use current powerup!");
+                }
+            }
+        }
+
+        private void UsePowerup()
+        {
+            if (interactPressed)
+            {
                 switch(_powerUpType)
                 {
                     case PowerUpType.Shrink:
                         StartCoroutine(StartShrink());
+                        _powerUpType = PowerUpType.None;
                         break;
                     case PowerUpType.Growth:
-                        StartCoroutine(StartGrowth());
+                        if (CheckForSpace())
+                        {
+                            StartCoroutine(StartGrowth());
+                            _powerUpType = PowerUpType.None;
+                        }
+                        break;
+                    case PowerUpType.Speed:
                         break;
                 }
             }
         }
-    }
 
-    IEnumerator StartShrink()
-    {
-        Vector3 minScale = Vector3.one * shrinkScale;
-        timer = 0f;
-
-        while (timer < timeToShrink)
+        void OnTriggerEnter(Collider collider)
         {
-            transform.localScale = Vector3.Lerp(originalScale, minScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
-            timer += Time.deltaTime;
-            yield return null;
+            if (collider.CompareTag("Power-Up"))
+            {
+                PowerupPickup powerupPickup = collider.GetComponent<PowerupPickup>();
+                if (powerupPickup != null)
+                {
+                    _powerUpType = powerupPickup._powerUpType;
+                }
+            }
         }
 
-        isShrunk = true;
-        yield return new WaitForSeconds(2f);
-        StartCoroutine(EndSizeChange());
-    }
-
-    IEnumerator EndSizeChange()
-    {
-        Vector3 currentScale = transform.localScale;
-        timer = 0f;
-
-        while (timer < timeToShrink)
+        IEnumerator StartShrink()
         {
-            transform.localScale = Vector3.Lerp(currentScale, originalScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
-            timer += Time.deltaTime;
-            yield return null;
+            if (!isShrunk)
+            {
+                Vector3 minScale = Vector3.one * shrinkScale;
+                timer = 0f;
+
+                while (timer < timeToShrink && !isShrunk)
+                {
+                    transform.localScale = Vector3.Lerp(originalScale, minScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                isShrunk = true;
+            }
+
+            yield return new WaitForSeconds(2f);
+            /*while (isShrunk)
+            {
+                if(CheckForSpace())
+                {
+                    StartCoroutine(EndSizeChange());
+                }
+            }*/
         }
 
-        isGrown = false;
-        isShrunk = false;
-    }
-
-    IEnumerator StartGrowth()
-    {
-        Vector3 maxScale = Vector3.one * growthScale;
-        timer = 0f;
-
-        while (timer < timeToGrow)
+        IEnumerator EndSizeChange()
         {
-            transform.localScale = Vector3.Lerp(originalScale, maxScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
-            timer += Time.deltaTime;
-            yield return null;
+            if (isShrunk || isGrown)
+            {
+                Vector3 currentScale = transform.localScale;
+                timer = 0f;
+
+                while (timer < timeToShrink)
+                {
+                    transform.localScale = Vector3.Lerp(currentScale, originalScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                isGrown = false;
+                isShrunk = false;
+            }
+            else
+            {
+                yield return null;
+            }
         }
 
-        isGrown = true;
-        yield return new WaitForSeconds(2f);
-        StartCoroutine(EndSizeChange());
-    }
+        IEnumerator StartGrowth()
+        {
+            Vector3 maxScale = Vector3.one * growthScale;
+            timer = 0f;
 
-    private bool CheckSpace()
-    {
-        return false;
+            while (timer < timeToGrow)
+            {
+                transform.localScale = Vector3.Lerp(originalScale, maxScale, shrinkAnimCurve.Evaluate(timer/timeToShrink));
+                timer += Time.deltaTime;
+                yield return null;
+            }
+
+            isGrown = true;
+            yield return new WaitForSeconds(2f);
+            StartCoroutine(EndSizeChange());
+        }
+
+        private bool CheckForSpace()
+        {
+            if (!Physics.CheckSphere(overheadCheckCollider.position, overheadCheckRadius, obstacleLayer))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void OnDrawGizmos()
+        {
+            /*// draws gizmo for overhead checker
+            if (CheckForSpace())
+            {
+                Gizmos.color = Color.green;
+            }
+            else
+            {
+                Gizmos.color = Color.red;
+            }
+            Gizmos.DrawSphere(overheadCheckCollider.position, overheadCheckRadius);*/
+        }
     }
 }

@@ -2,7 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupPickup : MonoBehaviour
+namespace KartGame.KartSystems
 {
-    [SerializeField] public KartPowerupManager.PowerUpType _powerUpType;
+    public class PowerupPickup : MonoBehaviour
+    {
+        [SerializeField] public KartPowerupManager.PowerUpType _powerUpType;
+
+        [SerializeField] private bool randomize;
+
+        void Start()
+        {
+
+        }
+
+        IEnumerator RandomPowerUp()
+        {
+            return null;
+        }
+    }
 }
+
