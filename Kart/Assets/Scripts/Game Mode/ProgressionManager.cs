@@ -4,6 +4,7 @@ using KartGame.KartSystems;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ProgressionManager : MonoBehaviour
 {
@@ -132,11 +133,13 @@ public class ProgressionManager : MonoBehaviour
     private void Win()
     {
         Debug.Log("Ya win!");
+        SceneManager.LoadScene("WinScene");
     }
 
     private void Lose()
     {
         Debug.Log("Ya lose!");
+        SceneManager.LoadScene("LoseScene");
     }
 
     // -------------------------------------
