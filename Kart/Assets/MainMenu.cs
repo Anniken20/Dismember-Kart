@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayButton()
     {
-        SceneManager.LoadScene("Amadin Test");
+        SceneManager.LoadScene("Map111");
     }
 
     public void QuitGame()
