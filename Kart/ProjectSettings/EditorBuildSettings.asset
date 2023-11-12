@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Karting/Scenes/WinScene.unity
     guid: d6801f2e59f75ee4b919cf5da4e48e3b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Amadin Test.unity
     guid: 58dd52ef8ffe596469589d9c7079cfab
   - enabled: 1
@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Level.unity
     guid: 08d9440c66f02124f91b24e7ec33f503
+  - enabled: 1
+    path: Assets/Scenes/Map111.unity
+    guid: 192eaa37ae522a045b1d1c1a7d4390fc
   m_configObjects: {}

@@ -13,6 +13,7 @@ namespace KartGame.KartSystems
 
         [Header("References")]
         private ArcadeKart arcadeKart;
+        private UIPowerupDisplay uiPowerupDisplay;
         public ArcadeKart.StatPowerup speedBoostStats = new ArcadeKart.StatPowerup
         {
             MaxTime = 5
@@ -77,6 +78,7 @@ namespace KartGame.KartSystems
         void Start()
         {
             originalScale = transform.localScale;
+            uiPowerupDisplay = GameObject.FindGameObjectWithTag("UI Manager").GetComponent<UIPowerupDisplay>(); // HEHEHAHEAHAHAEJHEHEHEAHAHAAHA
         }
 
         // Update is called once per frame
@@ -113,6 +115,7 @@ namespace KartGame.KartSystems
                 switch(_powerUpType)
                 {
                     case PowerUpType.Shrink:
+                        uiPowerupDisplay.AssBlastUSA();
                         audioSource.PlayOneShot(shrinkSound);
                         StartCoroutine(StartShrink());
                         _powerUpType = PowerUpType.None;
@@ -120,12 +123,14 @@ namespace KartGame.KartSystems
                     case PowerUpType.Growth:
                         if (CheckForSpace())
                         {
+                            uiPowerupDisplay.AssBlastUSA();
                             audioSource.PlayOneShot(growSound);
                             StartCoroutine(StartGrowth());
                             _powerUpType = PowerUpType.None;
                         }
                         break;
                     case PowerUpType.Speed:
+                        uiPowerupDisplay.AssBlastUSA();
                         audioSource.PlayOneShot(speedSound);
                         arcadeKart.AddPowerup(speedBoostStats);
                         StartCoroutine(EndSpeed());
@@ -137,13 +142,26 @@ namespace KartGame.KartSystems
 
         void OnTriggerEnter(Collider collider)
         {
-            if (collider.CompareTag("Power-Up"))
+            if (collider.CompareTag("Power-Up") && _powerUpType == PowerUpType.None)
             {
                 PowerupPickup powerupPickup = collider.GetComponent<PowerupPickup>();
                 if (powerupPickup != null)
                 {
                     audioSource.PlayOneShot(pickupSound);
                     _powerUpType = powerupPickup._powerUpType;
+
+                    switch(_powerUpType)
+                    {
+                        case PowerUpType.Shrink:
+                        uiPowerupDisplay.EnableShrinkSprite();
+                        break;
+                        case PowerUpType.Growth:
+                        uiPowerupDisplay.EnableGrowSprite();
+                        break;
+                        case PowerUpType.Speed:
+                        uiPowerupDisplay.EnableSpeedSprite();
+                        break;
+                    }
                 }
             }
 
