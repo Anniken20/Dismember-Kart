@@ -48,7 +48,7 @@ MonoBehaviour:
   checkpointsInScene: 1
   maxLaps: 3
   raceStarted: 0
-  startTime: 30
+  startTime: 60
   lapStatusText: {fileID: 2512132592403682659}
   timeStatusText: {fileID: 7068190964567050742}
   countdownStatusText: {fileID: 3379539640079392156}
@@ -991,9 +991,10 @@ GameObject:
   - component: {fileID: 4199675689174032481}
   - component: {fileID: 8213219036153893049}
   - component: {fileID: 6028082444094338039}
+  - component: {fileID: 6396294099016501677}
   m_Layer: 0
-  m_Name: Power Up Panel
-  m_TagString: Untagged
+  m_Name: Power Up UI Manager
+  m_TagString: UI Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1056,3 +1057,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6396294099016501677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8384436839984870930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 850e65b109ce34441b35d565b21acf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shrinkSprite: {fileID: 21300000, guid: 5c870be809abf694fb0bc865328037a9, type: 3}
+  growSprite: {fileID: 21300000, guid: 784e277a7ad5e6b4a8770ca18797ab38, type: 3}
+  speedSprite: {fileID: 21300000, guid: 9f63c04e5403ab4448615b93f9935a7c, type: 3}
+  powerupImage: {fileID: 8661786438984252829}
