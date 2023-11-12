@@ -10,6 +10,7 @@ TagManager:
   - Power-Up
   - Progression Manager
   - Breakable
+  - UI Manager
   layers:
   - Default
   - TransparentFX
