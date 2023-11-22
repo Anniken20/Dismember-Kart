@@ -34,7 +34,8 @@ namespace KartGame.KartSystems
             None,
             Shrink,
             Growth,
-            Speed
+            Speed,
+            Rat
         }
         [SerializeField] private PowerUpType _powerUpType; 
 
