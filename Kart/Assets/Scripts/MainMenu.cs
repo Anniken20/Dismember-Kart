@@ -9,6 +9,11 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Map111");
     }
+    
+    public void Play2Button()
+    {
+        SceneManager.LoadScene("2Player");
+    }
 
     public void QuitGame()
     {
