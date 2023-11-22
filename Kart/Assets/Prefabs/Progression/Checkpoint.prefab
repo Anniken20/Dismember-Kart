@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointNumber: 0
-  timeGained: 10
+  timeGained: 30
 --- !u!1 &5634693556876008538
 GameObject:
   m_ObjectHideFlags: 0
