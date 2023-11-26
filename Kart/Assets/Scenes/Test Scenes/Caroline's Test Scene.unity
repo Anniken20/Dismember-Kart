@@ -1518,15 +1518,15 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: a94361879cd207f4183db772e2084e95, type: 3}
 --- !u!4 &1994847680 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
+  m_CorrespondingSourceObject: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
     type: 3}
-  m_PrefabInstance: {fileID: 6194921773736624259}
+  m_PrefabInstance: {fileID: 1835317945978048589}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1994847681 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2197862594435022578, guid: 096f73f125f1e82449d22fcf18b8d84e,
+  m_CorrespondingSourceObject: {fileID: 3335011212155170790, guid: d089a73425987af4e896b4dee5029f67,
     type: 3}
-  m_PrefabInstance: {fileID: 6194921773736624259}
+  m_PrefabInstance: {fileID: 1835317945978048589}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2023409703
 PrefabInstance:
@@ -1806,12 +1806,12 @@ PrefabInstance:
     - target: {fileID: 2149650864801470001, guid: f734c44a6420590478854f67a2aa1d79,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000014786627
+      value: -0.0000000014786632
       objectReference: {fileID: 0}
     - target: {fileID: 2149650864801470001, guid: f734c44a6420590478854f67a2aa1d79,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 5.5011182e-12
+      value: -5.50112e-12
       objectReference: {fileID: 0}
     - target: {fileID: 2149650864801470001, guid: f734c44a6420590478854f67a2aa1d79,
         type: 3}
@@ -1957,12 +1957,12 @@ PrefabInstance:
     - target: {fileID: 766912323314307900, guid: 9f37044560e952944b575a5a4ff23ed7,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000014786627
+      value: -0.0000000014786632
       objectReference: {fileID: 0}
     - target: {fileID: 766912323314307900, guid: 9f37044560e952944b575a5a4ff23ed7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 5.5011182e-12
+      value: -5.50112e-12
       objectReference: {fileID: 0}
     - target: {fileID: 766912323314307900, guid: 9f37044560e952944b575a5a4ff23ed7,
         type: 3}
@@ -1999,6 +1999,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f37044560e952944b575a5a4ff23ed7, type: 3}
+--- !u!1001 &1835317945978048589
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.535
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.189
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -17.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202996465962018736, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5135837153271747265, guid: d089a73425987af4e896b4dee5029f67,
+        type: 3}
+      propertyPath: m_Name
+      value: Bram's Kart
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d089a73425987af4e896b4dee5029f67, type: 3}
 --- !u!1001 &2182825459152408321
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2349,74 +2417,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd7dd319236cfc24491199d3eb3ac4f7, type: 3}
---- !u!1001 &6194921773736624259
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.535
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.189
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -17.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2070357534373426852, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8614858096111174613, guid: 096f73f125f1e82449d22fcf18b8d84e,
-        type: 3}
-      propertyPath: m_Name
-      value: Bram's Kart
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 096f73f125f1e82449d22fcf18b8d84e, type: 3}
 --- !u!1001 &8962061705200800427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2560,7 +2560,7 @@ SceneRoots:
   - {fileID: 2100620128}
   - {fileID: 1467134960}
   - {fileID: 5378373634290242937}
-  - {fileID: 6194921773736624259}
+  - {fileID: 1835317945978048589}
   - {fileID: 255894541033970797}
   - {fileID: 677733008465734626}
   - {fileID: 2684686302542871251}
