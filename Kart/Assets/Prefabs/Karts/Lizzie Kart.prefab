@@ -218,6 +218,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1151830987937373759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1549408583982380099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1821305898971130414}
+  m_Layer: 2
+  m_Name: Rat Launch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1821305898971130414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549408583982380099}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.703, z: 2.156}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2187884077905017813}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1804886641327615653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1723,6 +1754,7 @@ Transform:
   - {fileID: 7323084152862063348}
   - {fileID: 4396888424183280778}
   - {fileID: 2046868085415719811}
+  - {fileID: 1821305898971130414}
   - {fileID: 571668299075262367}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2029,11 +2061,16 @@ MonoBehaviour:
   speedSound: {fileID: 8300000, guid: afd9b2e9e9d4d3c4cac0b186ee640120, type: 3}
   speedExpireSound: {fileID: 8300000, guid: 50257d7fe0bae964eb53ec4c57ab8dc7, type: 3}
   breakTombstoneSound: {fileID: 8300000, guid: 1928204660642f1409ccc742427e7b56, type: 3}
+  ratHit: {fileID: 8300000, guid: 399da3b0632d26640af965fb23500453, type: 3}
   overheadCheckCollider: {fileID: 571668299075262367}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 1
   overheadCheckRadius: 0.55
+  ratBastardPrefab: {fileID: 2704091861376210056, guid: 18b205268d7b88644aaf545a20971a52,
+    type: 3}
+  ratLaunchPosition: {fileID: 1821305898971130414}
+  stunDuration: 3
 --- !u!82 &218443955472142347
 AudioSource:
   m_ObjectHideFlags: 0
