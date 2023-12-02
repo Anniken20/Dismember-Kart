@@ -45,8 +45,12 @@ public class ProgressionManager : MonoBehaviour
     {
         if (raceStarted)
         {
+           if (!MenuManager.InfiniteTimeEnable)
+            {
             currentTime -= Time.deltaTime;
             UpdateTimer(currentTime);
+            }
+            
 
             if (currentLap >= maxLaps)
             {
