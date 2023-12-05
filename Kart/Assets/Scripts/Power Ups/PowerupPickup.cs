@@ -9,6 +9,7 @@ namespace KartGame.KartSystems
         [SerializeField] public KartPowerupManager.PowerUpType _powerUpType;
 
         [SerializeField] private bool randomize;
+        [SerializeField] private bool hasRats;
 
         void Start()
         {
@@ -21,7 +22,15 @@ namespace KartGame.KartSystems
         IEnumerator RandomPowerUp()
         {
             yield return new WaitForSeconds(1f);
-            _powerUpType = (KartPowerupManager.PowerUpType)Random.Range(1,4);
+            if (hasRats)
+            {
+                _powerUpType = (KartPowerupManager.PowerUpType)Random.Range(1,5);
+            }
+            else
+            {
+                _powerUpType = (KartPowerupManager.PowerUpType)Random.Range(1,4);
+            }
+            
             StartCoroutine(RandomPowerUp());
         }
     }
