@@ -13,7 +13,10 @@ namespace KartGame.KartSystems
 
         [Header("References")]
         private ArcadeKart arcadeKart;
+        private float originalTopSpeed;
+        private float originalReverseSpeed;
         private UIPowerupDisplay uiPowerupDisplay;
+        private Rigidbody rb;
         public ArcadeKart.StatPowerup speedBoostStats = new ArcadeKart.StatPowerup
         {
             MaxTime = 5
@@ -34,7 +37,8 @@ namespace KartGame.KartSystems
             None,
             Shrink,
             Growth,
-            Speed
+            Speed,
+            Rat
         }
         [SerializeField] private PowerUpType _powerUpType; 
 
@@ -54,12 +58,13 @@ namespace KartGame.KartSystems
 
         [Header("Audio")]
         AudioSource audioSource;
-        [SerializeField] AudioClip pickupSound;
-        [SerializeField] AudioClip growSound;
-        [SerializeField] AudioClip shrinkSound;
-        [SerializeField] AudioClip speedSound;
-        [SerializeField] AudioClip speedExpireSound;
-        [SerializeField] AudioClip breakTombstoneSound;
+        [SerializeField] private AudioClip pickupSound;
+        [SerializeField] private AudioClip growSound;
+        [SerializeField] private AudioClip shrinkSound;
+        [SerializeField] private AudioClip speedSound;
+        [SerializeField] private AudioClip speedExpireSound;
+        [SerializeField] private AudioClip breakTombstoneSound;
+        [SerializeField] private AudioClip ratHit;
         
 
         [Header("Overhead Check")]
@@ -67,11 +72,21 @@ namespace KartGame.KartSystems
         [SerializeField] private LayerMask obstacleLayer;
         public float overheadCheckRadius = 0.5f;
 
+        [Header("Rat Values")]
+        [SerializeField] private GameObject ratBastardPrefab;
+        [SerializeField] private Transform ratLaunchPosition;
+        [SerializeField] private float stunDuration = 3f;
+        private int ratCount = 0;
+        private int maxRats = 3; // change these values and I'll kill you
+        private bool ratLaunchCoolingDown;
+        private float ratLaunchCooldownTime = 1f;
+
         void Awake()
         {
             m_Inputs = GetComponents<IInput>();
             audioSource = GetComponent<AudioSource>();
             arcadeKart = GetComponent<ArcadeKart>();
+            rb = GetComponent<Rigidbody>();
         }
 
         // Start is called before the first frame update
@@ -79,6 +94,8 @@ namespace KartGame.KartSystems
         {
             originalScale = transform.localScale;
             uiPowerupDisplay = GameObject.FindGameObjectWithTag("UI Manager").GetComponent<UIPowerupDisplay>(); // HEHEHAHEAHAHAEJHEHEHEAHAHAAHA
+            originalTopSpeed = arcadeKart.baseStats.TopSpeed;
+            originalReverseSpeed = arcadeKart.baseStats.ReverseSpeed;
         }
 
         // Update is called once per frame
@@ -136,6 +153,26 @@ namespace KartGame.KartSystems
                         StartCoroutine(EndSpeed());
                         _powerUpType = PowerUpType.None;
                         break;
+                    case PowerUpType.Rat:
+                        if (!ratLaunchCoolingDown)
+                        {
+                            LaunchRat();
+                            ratCount --;
+                            if (ratCount == 2) // heheheheheheheheheheHEHAHAHAHAEHAHAHAHEHA
+                            {
+                                uiPowerupDisplay.EnableRat2Sprite();
+                            }
+                            else if (ratCount == 1)
+                            {
+                                uiPowerupDisplay.EnableRat1Sprite();
+                            }
+                            else if (ratCount < 0)
+                            {
+                                uiPowerupDisplay.AssBlastUSA();
+                                _powerUpType = PowerUpType.None; // I have gone past the point of insanity 
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -161,6 +198,10 @@ namespace KartGame.KartSystems
                         case PowerUpType.Speed:
                         uiPowerupDisplay.EnableSpeedSprite();
                         break;
+                        case PowerUpType.Rat:
+                        ratCount = maxRats;
+                        uiPowerupDisplay.EnableRat3Sprite(); // smile
+                        break;
                     }
                 }
             }
@@ -175,6 +216,27 @@ namespace KartGame.KartSystems
                 audioSource.PlayOneShot(breakTombstoneSound);
                 collider.gameObject.SetActive(false);
             }
+        }
+
+        void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.CompareTag("Rat Bastard"))
+            {
+                audioSource.PlayOneShot(ratHit);
+                Destroy(collision.gameObject);
+                rb.velocity = Vector3.zero;
+                rb.AddForce(Vector3.up * (500f * rb.mass));
+                StartCoroutine(Damaged());
+            }
+        }
+
+        IEnumerator Damaged()
+        {
+            arcadeKart.SetCanMove(false);
+            yield return new WaitForSeconds(stunDuration);
+            arcadeKart.SetCanMove(true);
+            arcadeKart.baseStats.TopSpeed = originalTopSpeed;
+            arcadeKart.baseStats.ReverseSpeed = originalReverseSpeed;
         }
 
         IEnumerator StartShrink()
@@ -247,6 +309,21 @@ namespace KartGame.KartSystems
             audioSource.PlayOneShot(speedExpireSound);
         }
 
+        private void LaunchRat()
+        {
+            ratLaunchCoolingDown = true;
+            StartCoroutine(RatLaunchCooldown());
+            GameObject rat = Instantiate(ratBastardPrefab) as GameObject;
+            rat.transform.position = ratLaunchPosition.position;
+            rat.GetComponent<Rigidbody>().velocity = transform.forward * 35f;
+        }
+
+        IEnumerator RatLaunchCooldown()
+        {
+            yield return new WaitForSeconds(ratLaunchCooldownTime);
+            ratLaunchCoolingDown = false;
+        }
+
         private bool CheckForSpace()
         {
             if (!Physics.CheckSphere(overheadCheckCollider.position, overheadCheckRadius, obstacleLayer))
@@ -256,18 +333,10 @@ namespace KartGame.KartSystems
             return false;
         }
 
+
         private void OnDrawGizmos()
         {
-            /*// draws gizmo for overhead checker
-            if (CheckForSpace())
-            {
-                Gizmos.color = Color.green;
-            }
-            else
-            {
-                Gizmos.color = Color.red;
-            }
-            Gizmos.DrawSphere(overheadCheckCollider.position, overheadCheckRadius);*/
+
         }
     }
 }

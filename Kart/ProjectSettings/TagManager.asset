@@ -11,6 +11,7 @@ TagManager:
   - Progression Manager
   - Breakable
   - UI Manager
+  - Rat Bastard
   layers:
   - Default
   - TransparentFX
