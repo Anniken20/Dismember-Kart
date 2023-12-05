@@ -32,7 +32,8 @@ public class Checkpoint : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             Debug.Log("Passed checkpoint: " + checkpointNumber);
-            progressionManager.AddToCheckpointList(checkpointNumber, timeGained);
+            int playerID = collider.GetComponent<PlayerID>().GetPlayerID();
+            progressionManager.AddToCheckpointList(checkpointNumber, timeGained, playerID);
         }
     }
 }

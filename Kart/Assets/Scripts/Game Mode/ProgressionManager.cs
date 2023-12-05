@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using KartGame.KartSystems;
 using TMPro;
 using Unity.VisualScripting;
@@ -9,7 +10,15 @@ using UnityEngine.SceneManagement;
 public class ProgressionManager : MonoBehaviour
 {
     [Header("References")]
-    private ArcadeKart arcadeKart;
+    private List<GameObject> kartObjects = new List<GameObject>();
+    private List<ArcadeKart> arcadeKarts = new List<ArcadeKart>();
+    [Header("Two Player Mode")]
+    [SerializeField] private bool twoPlayerMode;
+    [SerializeField] private TextMeshProUGUI player2LapStatusText;
+    [SerializeField] private TextMeshProUGUI player2TimeStatusText;
+    private List<int> player2CheckpointsPassed = new List<int>();
+    private int player2CurrentLap = 0;
+    private float player2CurrentTime;
 
     [Header("Laps")]
     [SerializeField] private int checkpointsInScene;
@@ -28,17 +37,31 @@ public class ProgressionManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lapStatusText;
     [SerializeField] private TextMeshProUGUI timeStatusText;
     [SerializeField] private TextMeshProUGUI countdownStatusText;
-
-
+    [Header("Audio")]
+    [SerializeField] private AudioClip checkpointSound;
+    [SerializeField] private AudioClip LapSound;
 
     void Awake()
     {
-        arcadeKart = GameObject.FindGameObjectWithTag("Player").GetComponent<ArcadeKart>();
+        kartObjects = GameObject.FindGameObjectsWithTag("Player").ToList<GameObject>();
+        foreach(GameObject kartObject in kartObjects)
+        {
+            arcadeKarts.Add(kartObject.GetComponent<ArcadeKart>());
+        }
         
         UpdateTimer(startTime);
-        UpdateLap();
+        if (twoPlayerMode)
+        {
+            UpdateTimerForPlayer2(player2CurrentTime);
+        }
+        UpdateLap(-1);
         Countdown();
         currentTime = startTime;
+        if (twoPlayerMode)
+        {
+            player2CurrentTime = startTime;
+        }
+
         countdownCurrentTime = countdownStartTime;
     }
     void Update()
@@ -47,33 +70,53 @@ public class ProgressionManager : MonoBehaviour
         {
            if (!MenuManager.InfiniteTimeEnable)
             {
-            currentTime -= Time.deltaTime;
-            UpdateTimer(currentTime);
+                currentTime -= Time.deltaTime;
+                UpdateTimer(currentTime);
+                if (twoPlayerMode)
+                {
+                    player2CurrentTime -= Time.deltaTime;
+                    UpdateTimerForPlayer2(player2CurrentTime);
+                }
+                
             }
             
 
             if (currentLap >= maxLaps)
             {
-                Win();
+                Win(1); // for player 1
+            }
+            if (player2CurrentLap >= maxLaps)
+            {
+                Win(2); // for player 2
             }
             
             if (currentTime <= 0f)
             {
-                Lose();
+                Lose(1); // for player 1
+            }
+            if (player2CurrentTime <= 0 && twoPlayerMode)
+            {
+                Lose(2); // for player 2
             }
         }
         else
         {
             if (countdownCurrentTime >= 0)
             {
-                arcadeKart.SetCanMove(false);
+                foreach(ArcadeKart arcadeKart in arcadeKarts)
+                {
+                    arcadeKart.SetCanMove(false);
+                }
                 Countdown();
                 countdownCurrentTime -= Time.deltaTime;
             }
             else
             {
                 countdownStatusText.enabled = false;
-                arcadeKart.SetCanMove(true);
+                foreach(ArcadeKart arcadeKart in arcadeKarts)
+                {
+                    arcadeKart.SetCanMove(true);
+                }
                 raceStarted = true;
             }
         }
@@ -81,30 +124,55 @@ public class ProgressionManager : MonoBehaviour
 
     // -------------------------------------
     // LAP STUFF
-    public void AddToCheckpointList(int newCheckpoint, float timeGained)
+    public void AddToCheckpointList(int newCheckpoint, float timeGained, int playerID)
     {
         if (!checkpointsPassed.Contains(newCheckpoint))
         {
-            AddTime(timeGained);
-            checkpointsPassed.Add(newCheckpoint);
+            if (playerID == 1)
+            {
+                AddTime(timeGained, 1);
+                checkpointsPassed.Add(newCheckpoint);
+            }
+            else
+            {
+                AddTime(timeGained, 2); // but for player two!
+                player2CheckpointsPassed.Add(newCheckpoint); // but for player two
+            }
+
         }
     }
 
-    public void UpdateLap()
+    public void UpdateLap(int playerID)
     {
         if (checkpointsPassed.Count >= checkpointsInScene)
         {
             Debug.Log("Lap Completed");
-            RefreshCheckpoints();
+            RefreshCheckpoints(1);
+            currentLap++;
+        }
+        if (player2CheckpointsPassed.Count >= checkpointsInScene)
+        {
+            RefreshCheckpoints(2);
             currentLap++;
         }
 
         lapStatusText.text = string.Format(currentLap + " / " + maxLaps);
+        if (twoPlayerMode)
+        {
+            player2LapStatusText.text = string.Format(player2CurrentLap + " / " + maxLaps);
+        }
     }
 
-    private void RefreshCheckpoints()
+    private void RefreshCheckpoints(int PlayerID)
     {
-        checkpointsPassed.Clear();
+        if (PlayerID == 1)
+        {
+            checkpointsPassed.Clear();
+        }
+        else
+        {
+            player2CheckpointsPassed.Clear();
+        }
     }
 
     // -------------------------------------
@@ -118,10 +186,27 @@ public class ProgressionManager : MonoBehaviour
         //Debug.Log(minutes + ":" + seconds);
     }
 
-    public void AddTime(float timeGained)
+    private void UpdateTimerForPlayer2(float player2CurrentTime)
     {
-        currentTime += timeGained;
-        UpdateTimer(currentTime);
+        float minutes = Mathf.FloorToInt(player2CurrentTime / 60);
+        float seconds = Mathf.FloorToInt(player2CurrentTime % 60);
+
+        player2TimeStatusText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void AddTime(float timeGained, int playerID)
+    {
+        if (playerID == 1)
+        {
+            currentTime += timeGained;
+            UpdateTimer(currentTime);
+        }
+        else
+        {
+            player2CurrentTime += timeGained;
+            UpdateTimerForPlayer2(player2CurrentTime);
+        }
+
     }
 
     private void Countdown()
@@ -130,23 +215,36 @@ public class ProgressionManager : MonoBehaviour
         countdownStatusText.text = cutoff.ToString();
     }
 
-
     // -------------------------------------
     // WIN/LOSE
 
-    private void Win()
+    private void Win(int playerID)
     {
-        Debug.Log("Ya win!");
-        SceneManager.LoadScene("WinScene");
+        if (playerID == 1)
+        {
+            SceneManager.LoadScene("P1WinScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("P2WinScene");
+        }
     }
 
-    private void Lose()
+    private void Lose(int playerID)
     {
-        Debug.Log("Ya lose!");
+        if (twoPlayerMode)
+        {
+            if (playerID == 1)
+            {
+                SceneManager.LoadScene("P2WinScene");
+            }
+            if (playerID == 2)
+            {
+                SceneManager.LoadScene("P1WinScene");
+            }
+        }
         SceneManager.LoadScene("LoseScene");
     }
 
     // -------------------------------------
-    
-
 }
