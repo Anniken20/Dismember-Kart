@@ -76,6 +76,10 @@ namespace KartGame.KartSystems
         [SerializeField] private GameObject ratBastardPrefab;
         [SerializeField] private Transform ratLaunchPosition;
         [SerializeField] private float stunDuration = 3f;
+        private int ratCount = 0;
+        private int maxRats = 3; // change these values and I'll kill you
+        private bool ratLaunchCoolingDown;
+        private float ratLaunchCooldownTime = 1f;
 
         void Awake()
         {
@@ -150,8 +154,24 @@ namespace KartGame.KartSystems
                         _powerUpType = PowerUpType.None;
                         break;
                     case PowerUpType.Rat:
-                        LaunchRat();
-                        _powerUpType = PowerUpType.None;
+                        if (!ratLaunchCoolingDown)
+                        {
+                            LaunchRat();
+                            ratCount --;
+                            if (ratCount == 2) // heheheheheheheheheheHEHAHAHAHAEHAHAHAHEHA
+                            {
+                                uiPowerupDisplay.EnableRat2Sprite();
+                            }
+                            else if (ratCount == 1)
+                            {
+                                uiPowerupDisplay.EnableRat1Sprite();
+                            }
+                            else if (ratCount < 1)
+                            {
+                                uiPowerupDisplay.AssBlastUSA();
+                                _powerUpType = PowerUpType.None; // I have gone past the point of insanity 
+                            }
+                        }
                         break;
                 }
             }
@@ -179,6 +199,8 @@ namespace KartGame.KartSystems
                         uiPowerupDisplay.EnableSpeedSprite();
                         break;
                         case PowerUpType.Rat:
+                        ratCount = maxRats;
+                        uiPowerupDisplay.EnableRat3Sprite(); // smile
                         break;
                     }
                 }
@@ -289,9 +311,17 @@ namespace KartGame.KartSystems
 
         private void LaunchRat()
         {
+            ratLaunchCoolingDown = true;
+            StartCoroutine(RatLaunchCooldown());
             GameObject rat = Instantiate(ratBastardPrefab) as GameObject;
             rat.transform.position = ratLaunchPosition.position;
             rat.GetComponent<Rigidbody>().velocity = transform.forward * 35f;
+        }
+
+        IEnumerator RatLaunchCooldown()
+        {
+            yield return new WaitForSeconds(ratLaunchCooldownTime);
+            ratLaunchCoolingDown = false;
         }
 
         private bool CheckForSpace()
@@ -302,6 +332,7 @@ namespace KartGame.KartSystems
             }
             return false;
         }
+
 
         private void OnDrawGizmos()
         {

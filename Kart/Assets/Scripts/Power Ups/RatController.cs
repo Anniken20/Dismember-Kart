@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RatController : MonoBehaviour
 {
+    [SerializeField] private GameObject ratHit;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,5 +27,11 @@ public class RatController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameObject hitEffect = Instantiate(ratHit);
+        hitEffect.transform.position = gameObject.transform.position;
     }
 }

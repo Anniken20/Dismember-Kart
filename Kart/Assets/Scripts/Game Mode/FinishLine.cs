@@ -28,7 +28,8 @@ public class FinishLine : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             Debug.Log("It was a player!");
-            progressionManager.UpdateLap();
+            int playerID = collider.GetComponent<PlayerID>().GetPlayerID();
+            progressionManager.UpdateLap(playerID);
         }
     }
 }
