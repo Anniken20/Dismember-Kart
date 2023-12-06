@@ -164,7 +164,7 @@ InputManager:
     invert: 0
     type: 2
     axis: 0
-    joyNum: 0
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Vertical
     descriptiveName: 
@@ -201,7 +201,7 @@ InputManager:
     m_Name: Brake
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
+    negativeButton: s
     positiveButton: joystick button 2
     altNegativeButton: 
     altPositiveButton: space
@@ -390,64 +390,64 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Enable Debug Button 1
+    m_Name: Horizontal Controller Only
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: left ctrl
+    positiveButton: 
     altNegativeButton: 
-    altPositiveButton: joystick button 8
+    altPositiveButton: 
     gravity: 0
-    dead: 0
-    sensitivity: 0
+    dead: 0.19
+    sensitivity: 1
     snap: 0
     invert: 0
-    type: 0
+    type: 2
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Enable Debug Button 2
+    m_Name: Interact Controller Only
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: backspace
-    altNegativeButton: 
-    altPositiveButton: joystick button 9
-    gravity: 0
-    dead: 0
-    sensitivity: 0
-    snap: 0
-    invert: 0
-    type: 0
-    axis: 0
-    joyNum: 0
-  - serializedVersion: 3
-    m_Name: Debug Reset
-    descriptiveName: 
-    descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: left alt
+    positiveButton: 
     altNegativeButton: 
     altPositiveButton: joystick button 1
-    gravity: 0
-    dead: 0
-    sensitivity: 0
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
     snap: 0
     invert: 0
     type: 0
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Debug Next
+    m_Name: Accelerate Controller Only
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: page down
+    positiveButton: joystick button 0
     altNegativeButton: 
-    altPositiveButton: joystick button 5
-    gravity: 0
-    dead: 0
-    sensitivity: 0
+    altPositiveButton: up
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Brake Controller Only
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 2
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
     snap: 0
     invert: 0
     type: 0
@@ -582,7 +582,7 @@ InputManager:
     axis: 5
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Horizontal Keyboard
+    m_Name: Horizontal Keyboard Only
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -596,7 +596,7 @@ InputManager:
     invert: 0
     type: 0
     axis: 0
-    joyNum: 0
+    joyNum: 16
   - serializedVersion: 3
     m_Name: Accelerate Keyboard Only
     descriptiveName: 
@@ -614,13 +614,13 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Break Keyboard Only
+    m_Name: Brake Keyboard Only
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: space
+    negativeButton: s
+    positiveButton: 
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: space
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
