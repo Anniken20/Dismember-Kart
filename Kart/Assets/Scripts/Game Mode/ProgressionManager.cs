@@ -12,6 +12,7 @@ public class ProgressionManager : MonoBehaviour
     [Header("References")]
     private List<GameObject> kartObjects = new List<GameObject>();
     private List<ArcadeKart> arcadeKarts = new List<ArcadeKart>();
+    private AudioSource audioSource;
     [Header("Two Player Mode")]
     [SerializeField] private bool twoPlayerMode;
     [SerializeField] private TextMeshProUGUI player2LapStatusText;
@@ -54,6 +55,7 @@ public class ProgressionManager : MonoBehaviour
         {
             UpdateTimerForPlayer2(player2CurrentTime);
         }
+        audioSource = GetComponent<AudioSource>();
         UpdateLap(-1);
         Countdown();
         currentTime = startTime;
@@ -132,11 +134,13 @@ public class ProgressionManager : MonoBehaviour
             {
                 AddTime(timeGained, 1);
                 checkpointsPassed.Add(newCheckpoint);
+                audioSource.PlayOneShot(checkpointSound);
             }
             else
             {
                 AddTime(timeGained, 2); // but for player two!
                 player2CheckpointsPassed.Add(newCheckpoint); // but for player two
+                audioSource.PlayOneShot(checkpointSound);
             }
 
         }
@@ -146,14 +150,15 @@ public class ProgressionManager : MonoBehaviour
     {
         if (checkpointsPassed.Count >= checkpointsInScene)
         {
-            Debug.Log("Lap Completed");
             RefreshCheckpoints(1);
             currentLap++;
+            audioSource.PlayOneShot(LapSound);
         }
         if (player2CheckpointsPassed.Count >= checkpointsInScene)
         {
             RefreshCheckpoints(2);
             currentLap++;
+            audioSource.PlayOneShot(LapSound);
         }
 
         lapStatusText.text = string.Format(currentLap + " / " + maxLaps);
