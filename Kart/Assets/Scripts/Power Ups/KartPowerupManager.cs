@@ -166,7 +166,7 @@ namespace KartGame.KartSystems
                             {
                                 uiPowerupDisplay.EnableRat1Sprite();
                             }
-                            else if (ratCount < 0)
+                            else if (ratCount < 1)
                             {
                                 uiPowerupDisplay.AssBlastUSA();
                                 _powerUpType = PowerUpType.None; // I have gone past the point of insanity 
