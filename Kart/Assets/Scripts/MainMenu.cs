@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
     
     public void Play2Button()
     {
-        SceneManager.LoadScene("2Player");
+        SceneManager.LoadScene("Map222");
     }
 
     public void QuitGame()

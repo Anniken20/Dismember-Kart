@@ -15,7 +15,7 @@ namespace KartGame.KartSystems
         private ArcadeKart arcadeKart;
         private float originalTopSpeed;
         private float originalReverseSpeed;
-        private UIPowerupDisplay uiPowerupDisplay;
+        [SerializeField]private UIPowerupDisplay uiPowerupDisplay;
         private Rigidbody rb;
         public ArcadeKart.StatPowerup speedBoostStats = new ArcadeKart.StatPowerup
         {
@@ -93,7 +93,7 @@ namespace KartGame.KartSystems
         void Start()
         {
             originalScale = transform.localScale;
-            uiPowerupDisplay = GameObject.FindGameObjectWithTag("UI Manager").GetComponent<UIPowerupDisplay>(); // HEHEHAHEAHAHAEJHEHEHEAHAHAAHA
+            /*uiPowerupDisplay = GameObject.FindGameObjectWithTag("UI Manager").GetComponent<UIPowerupDisplay>(); // HEHEHAHEAHAHAEJHEHEHEAHAHAAHA*/
             originalTopSpeed = arcadeKart.baseStats.TopSpeed;
             originalReverseSpeed = arcadeKart.baseStats.ReverseSpeed;
         }
